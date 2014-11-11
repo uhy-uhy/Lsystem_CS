@@ -22,8 +22,8 @@ public class Run_Lsystem
         bool wall = false;
         int[,] wallNum = new int[20, 20];
 
-        //Application.Run(new Draw_2D(wallNum, wall, startX, startY, wait_time, overlap));
-        Application.Run(new Draw_2D_2(wallNum, wall, startX, startY, wait_time, overlap));
+        Application.Run(new Draw_2D(wallNum, wall, startX, startY, wait_time, overlap));
+        //Application.Run(new Draw_2D_2(wallNum, wall, startX, startY, wait_time, overlap));
     }
 }
 
