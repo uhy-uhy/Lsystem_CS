@@ -34,9 +34,9 @@ public class Lsystem {
             now.set_state(init_state); //餌の上は空腹度初期値に
             now.onFeed(); //餌の上にいる get_feedをtrueに
         }
-        if (mouse_down) now.state++;
+        //if (mouse_down) now.state++;
         //餌の上に乗ってないセルは腹が減る(いらないかも)
-        if (!MAP.checkFeed(now.x, now.y) && now.state >= 0) now.state--;
+        //if (!MAP.checkFeed(now.x, now.y) && now.state >= 0) now.state--;
         //stateが0以下になると死滅状態になる
         if (now.state <= 0)
         {

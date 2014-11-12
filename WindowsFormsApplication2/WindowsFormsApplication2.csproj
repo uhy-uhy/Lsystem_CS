@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="CellState.cs" />
     <Compile Include="DelList.cs" />
+    <Compile Include="Draw_2D.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Draw_2D_2.cs">
       <SubType>Form</SubType>
     </Compile>
