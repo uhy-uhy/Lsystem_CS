@@ -101,64 +101,48 @@ class Draw_2D : Form
         {
             node = tmp_queue.Dequeue();
 
-            if (!node.Lstate.Equals("3"))
+            x = node.x;
+            y = node.y;
+            if (finish == true) node.replaceLstate("d");
+            //枝の色を餌の色と同じ色にする
+            //if (map.checkFeed(y, x)) node.setpColor(MAP.Lmap[y,x].c);
+            if (MAP.checkFeed(x, y)) node.setpColor(MAP.getHashLmap(x, y).c);
+            //餌の上に乗ったとき
+            if (MAP.checkFeed(x, y))
             {
+                node.setpColor(Color.Green);
+                node.set_state(init_state); //餌の上は空腹度初期値に
+                node.onFeed(); //餌の上にいる get_feedをtrueに
+            }
+            //描画(表示は後)
+            brush = new SolidBrush(node.c);
+            g.FillRectangle(brush, node.x, node.y, 1, 1);
 
-                x = node.x;
-                y = node.y;
-                if (finish == true) node.replaceLstate("d");
-                //枝の色を餌の色と同じ色にする
-                //if (map.checkFeed(y, x)) node.setpColor(MAP.Lmap[y,x].c);
-                if (MAP.checkFeed(x, y)) node.setpColor(MAP.getHashLmap(x, y).c);
-                //餌の上に乗ったとき
-                if (MAP.checkFeed(x, y))
-                {
-                    node.setpColor(Color.Green);
-                    node.set_state(init_state); //餌の上は空腹度初期値に
-                    node.onFeed(); //餌の上にいる get_feedをtrueに
-                }
-                //描画(表示は後)
-                brush = new SolidBrush(node.c);
-                g.FillRectangle(brush, node.x, node.y, 1, 1);
+            foreach (Cellstate childNode in node.children)
+            {
+                tmp_queue.Enqueue(childNode); //現セルの子セルをキューの末尾に追加
+            }
+            /*
+             * ここで状態変数を見てルールを適用する
+             * 例:0→3|1 , >2→>(3[0]0)
+             */
+            ls.apply_rule(node); //nullが返ってきた場合、MAP上から消えた（死滅した）
 
-                foreach (Cellstate childNode in node.children)
-                {
-                    tmp_queue.Enqueue(childNode); //現セルの子セルをキューの末尾に追加
-                }
+            //nodeがnull →　削除された
+            if (node != null)
+            {
                 /*
-                 * ここで状態変数を見てルールを適用する
-                 * 例:0→3|1 , >2→>(3[0]0)
+                 * ここで式を分割して分割された分-1の子を作成する
+                 * 例 3|1 : 3(親)と|1(正面を向いた子)に分ける
+                 * 　 3[0]0 : 3(親)と[0(左に45度方向を変えた子)と]0(右に45度方向を変えた子)に分ける
                  */
-                ls.apply_rule(node); //nullが返ってきた場合、MAP上から消えた（死滅した）
+                if (node.Lstate.Length > 2) node = ls.set_Tree(node);
 
-                //nodeがnull →　削除された
-                if (node != null)
-                {
-                    /*
-                     * ここで式を分割して分割された分-1の子を作成する
-                     * 例 3|1 : 3(親)と|1(正面を向いた子)に分ける
-                     * 　 3[0]0 : 3(親)と[0(左に45度方向を変えた子)と]0(右に45度方向を変えた子)に分ける
-                     */
-                    if (node.Lstate.Length > 2) node = ls.set_Tree(node);
-
-                    //餌の上に乗ってないセルは腹が減る(いらないかも)
-                    if (!MAP.checkFeed(x, y)) node.state--;
-                }
-
+                //餌の上に乗ってないセルは腹が減る(いらないかも)
+                if (!MAP.checkFeed(x, y)) node.state--;
             }
-            else
-            {
-                if (finish == true) node.replaceLstate("d");
-                //描画(表示は後)
-                brush = new SolidBrush(node.c);
-                g.FillRectangle(brush, node.x, node.y, 1, 1);
 
-                foreach (Cellstate childNode in node.children)
-                {
-                    tmp_queue.Enqueue(childNode); //現セルの子セルをキューの末尾に追加
-                }
 
-            }
 
         }
         Invalidate();
