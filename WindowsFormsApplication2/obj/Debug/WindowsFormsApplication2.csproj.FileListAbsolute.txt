@@ -22,3 +22,6 @@ C:\Users\pp\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\bin\Debug\Windo
 C:\Users\pp\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.csprojResolveAssemblyReference.cache
 C:\Users\pp\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.Properties.Resources.resources
 C:\Users\pp\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.csproj.GenerateResource.Cache
+E:\user\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\bin\Debug\WindowsFormsApplication2.exe.config
+E:\user\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.exe
+E:\user\Documents\GitHub\Lsystem_CS\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.pdb
