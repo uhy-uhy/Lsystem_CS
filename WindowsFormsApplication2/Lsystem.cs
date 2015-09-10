@@ -19,7 +19,7 @@ public class Lsystem {
 
     String[] cons = { "|", "[", "]", ">", "<", "(", ")", "=" };
 
-    public Cellstate first_proc(Cellstate now,bool finish,int init_state,bool mouse_down)
+    public Cellstate first_proc(Cellstate now,bool finish,int init_state)
     {
         if (finish == true) now.replaceLstate("d");
         //枝の色を餌の色と同じ色にする
@@ -34,9 +34,8 @@ public class Lsystem {
             now.set_state(init_state); //餌の上は空腹度初期値に
             now.onFeed(); //餌の上にいる get_feedをtrueに
         }
-        //if (mouse_down) now.state++;
         //餌の上に乗ってないセルは腹が減る(いらないかも)
-        //if (!MAP.checkFeed(now.x, now.y) && now.state >= 0) now.state--;
+        if (!MAP.checkFeed(now.x, now.y) && now.state >= 0) now.state--;
         //stateが0以下になると死滅状態になる
         if (now.state <= 0)
         {
@@ -63,7 +62,7 @@ public class Lsystem {
                 }
             }
         }
-        else s = now.Lstate;
+        else if(now.Lstate.Length == 1)s = now.Lstate;
 
         Random rnd = new Random();
         double margin = (double)MAP.total_cell / (double)init_state;
@@ -140,7 +139,7 @@ public class Lsystem {
         {
 
             //先端の子が死んでいく処理
-            if (now.children.Count <= 0)
+            if (now.children.Count == 0)
             {
                 //セルが餌の上にいないとき
                 if (now.on_feed == false)
@@ -162,12 +161,15 @@ public class Lsystem {
                     //now.replaceLstate("0");
                 }
             }
+            else
+            {
+                new_s = s;
+            }
         }
         else
         {
             new_s = s;
         }
-
         
         now.replaceLstate(new_s);
     }
@@ -198,7 +200,7 @@ public class Lsystem {
 	 * 変化した状態に対しての処理
 	 * 子を作成し、配置する。（n分木を作成する）
 	 */
-    public Cellstate set_Tree(Cellstate now)
+    public void set_Tree(Cellstate now)
     {
         List<String> Lstr = new List<String>();
 
@@ -240,7 +242,7 @@ public class Lsystem {
 				now.replaceLstate("d");
 			}
 		}
-        return now;
+        return ;
     }
 
 	//Lsystem2 子の設定

@@ -54,11 +54,8 @@ class Draw_2D : Form
          * テスト用
          */
         String s = "0";
-        //(満腹度、x、y)
-        now = new Cellstate(init_state, startY, startX);
-        now.setdirection(9);
-        now.addLstate(s);
-        Roots.setRootList(now);
+        //初期セル生成
+        now = CreateNewCell(s, init_state, startX, startY, 5);
 
         /*`
          * 描画用
@@ -89,7 +86,7 @@ class Draw_2D : Form
         //グラフィック用
         Graphics g = Graphics.FromImage(image);
         Brush brush;
-        //一番古い親・・・・・・・・・・一番若い子の幅優先探索の順番でキューに入れていく
+        //一番古い親・・・一番若い子の幅優先探索の順番でキューに入れていく
         Queue<Cellstate> tmp_queue = new Queue<Cellstate>();
         //背景を塗りつぶす
         brush = new SolidBrush(Color.White);
@@ -104,16 +101,10 @@ class Draw_2D : Form
             x = node.x;
             y = node.y;
             if (finish == true) node.replaceLstate("d");
-            //枝の色を餌の色と同じ色にする
-            //if (map.checkFeed(y, x)) node.setpColor(MAP.Lmap[y,x].c);
-            if (MAP.checkFeed(x, y)) node.setpColor(MAP.getHashLmap(x, y).c);
-            //餌の上に乗ったとき
-            if (MAP.checkFeed(x, y))
-            {
-                node.setpColor(Color.Green);
-                node.set_state(init_state); //餌の上は空腹度初期値に
-                node.onFeed(); //餌の上にいる get_feedをtrueに
-            }
+
+            //ノードへの初期操作
+            ls.first_proc(node, finish, init_state);
+
             //描画(表示は後)
             brush = new SolidBrush(node.c);
             g.FillRectangle(brush, node.x, node.y, 1, 1);
@@ -126,9 +117,9 @@ class Draw_2D : Form
              * ここで状態変数を見てルールを適用する
              * 例:0→3|1 , >2→>(3[0]0)
              */
-            ls.apply_rule(node); //nullが返ってきた場合、MAP上から消えた（死滅した）
+            ls.apply_rule(node);
 
-            //nodeがnull →　削除された
+            //子ノードの追加
             if (node != null)
             {
                 /*
@@ -136,14 +127,9 @@ class Draw_2D : Form
                  * 例 3|1 : 3(親)と|1(正面を向いた子)に分ける
                  * 　 3[0]0 : 3(親)と[0(左に45度方向を変えた子)と]0(右に45度方向を変えた子)に分ける
                  */
-                if (node.Lstate.Length > 2) node = ls.set_Tree(node);
+                if (node.Lstate.Length > 2) ls.set_Tree(node);
 
-                //餌の上に乗ってないセルは腹が減る(いらないかも)
-                if (!MAP.checkFeed(x, y)) node.state--;
             }
-
-
-
         }
         Invalidate();
         foreach (Cellstate root_cell in Roots.roots)
@@ -173,5 +159,16 @@ class Draw_2D : Form
         e.Graphics.DrawImage(image, 0, 0);
     }
 
+    private Cellstate CreateNewCell(String Lstate, int init_state, int x, int y, int direction)
+    {
+        Cellstate new_cell = new Cellstate(init_state, x, y);
+        new_cell.setdirection(direction);
+        new_cell.addLstate(Lstate);
+        Roots.setRootList(new_cell);
 
+        MAP.getHashLmap(x, y).addPopulation();
+        MAP.getHashLmap(x, y).addCell(new_cell);
+
+        return (new_cell);
+    }
 }

@@ -172,7 +172,7 @@ class Draw_2D_2 : Form
 
       
             //ノードへの初期操作
-            ls.first_proc(node, finish, init_state, mouse_down_flag);
+            ls.first_proc(node, finish, init_state);
 
             //描画(表示は後)
             brush = new SolidBrush(node.c);
@@ -193,7 +193,7 @@ class Draw_2D_2 : Form
                  * 例 3|1 : 3(親)と|1(正面を向いた子)に分ける
                  * 　 3[0]0 : 3(親)と[0(左に45度方向を変えた子)と]0(右に45度方向を変えた子)に分ける
                  */
-                if (node.Lstate.Length > 2) node = ls.set_Tree(node);
+                if (node.Lstate.Length > 2) ls.set_Tree(node);
 
                 //餌の上に乗ってないセルは腹が減る(いらないかも)
                 //if (!map.checkFeed(y, x)) node.state--;
@@ -329,7 +329,7 @@ class Draw_2D_2 : Form
     private Cellstate CreateNewCell(String Lstate,int init_state,int x,int y,int direction)
     {
         Cellstate new_cell = new Cellstate(init_state,x,y);
-        new_cell.setdirection(9);
+        new_cell.setdirection(direction);
         new_cell.addLstate(Lstate);
         Roots.setRootList(new_cell);
 
